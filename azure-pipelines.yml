@@ -15,25 +15,27 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '6.x'
 - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-- task: DotNetCoreCLI@2
+
+- task: SonarCloudPrepare@2
   inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
+    SonarCloud: 'sonarCloud'
+    organization: 'anubhavdev-organization'
+    scannerMode: 'MSBuild'
+    projectKey: 'Anubhav'
+    projectName: 'Projectfor.net'
+
+- task: SonarCloudAnalyze@2
+
+- task: SonarCloudPublish@2
+  inputs:
+    pollingTimeoutSec: '300'
 
