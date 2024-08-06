@@ -37,8 +37,8 @@ stages:
         SonarCloud: 'sonarCloud'
         organization: 'anubhavdev-organization'
         scannerMode: 'MSBuild'
-        projectKey: 'hello-world-api'
-        projectName: 'hello-world-api'
+        projectKey: 'Anubhav'
+        projectName: Projectfor.net'
 
   - job: AnalyzeWithSonarCloud
     dependsOn: PrepareSonarCloudAnalysis
