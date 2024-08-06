@@ -27,23 +27,25 @@ stages:
         command: 'build'
         projects: '**/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
-
+        
 - stage: QualityAnalysis
   jobs:
   - job: PrepareSonarCloudAnalysis
     steps:
     - task: SonarCloudPrepare@2
       inputs:
-        SonarCloud: 'sonarCloud'
-        organization: 'anubhavdev-organization'
+        SonarCloud: 'SonarCloud'
+        organization: 'anubhavbhardwaj9759'
         scannerMode: 'MSBuild'
-        projectKey: 'Anubhav'
-        projectName: Projectfor.net'
+        projectKey: '9216332bb16d2a7d503056f7d539f3f0501c982b'
+        projectName: 'DotNet Project'
 
   - job: AnalyzeWithSonarCloud
     dependsOn: PrepareSonarCloudAnalysis
     steps:
     - task: SonarCloudAnalyze@2
+      inputs:
+        jdkversion: 'JAVA_HOME'
 
   - job: PublishSonarCloudReport
     dependsOn: AnalyzeWithSonarCloud
