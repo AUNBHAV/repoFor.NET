@@ -1,8 +1,3 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
 - main
 
@@ -14,13 +9,45 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+stages:
+- stage: Setup
+  jobs:
+  - job: InstallTools
+    steps:
+    - task: NuGetToolInstaller@1
+      inputs:
+        versionSpec: '4.8'
 
+- stage: Build
+  jobs:
+  - job: BuildProject
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
 
+- stage: QualityAnalysis
+  jobs:
+  - job: PrepareSonarCloudAnalysis
+    steps:
+    - task: SonarCloudPrepare@2
+      inputs:
+        SonarCloud: 'sonarCloud'
+        organization: 'anubhavdev-organization'
+        scannerMode: 'MSBuild'
+        projectKey: 'hello-world-api'
+        projectName: 'hello-world-api'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+  - job: AnalyzeWithSonarCloud
+    dependsOn: PrepareSonarCloudAnalysis
+    steps:
+    - task: SonarCloudAnalyze@2
+
+  - job: PublishSonarCloudReport
+    dependsOn: AnalyzeWithSonarCloud
+    steps:
+    - task: SonarCloudPublish@2
+      inputs:
+        pollingTimeoutSec: '300'
