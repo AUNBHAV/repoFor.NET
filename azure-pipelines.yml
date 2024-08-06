@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  name: Default
+  name: Azure Pipeline
 
 variables:
   solution: '**/*.sln'
@@ -24,19 +24,3 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-
-
-- task: SonarCloudPrepare@2
-  inputs:
-    SonarCloud: 'sonarCloud'
-    organization: 'anubhavdev-organization'
-    scannerMode: 'MSBuild'
-    projectKey: 'Anubhav'
-    projectName: 'Projectfor.net'
-
-- task: SonarCloudAnalyze@2
-
-- task: SonarCloudPublish@2
-  inputs:
-    pollingTimeoutSec: '300'
-
