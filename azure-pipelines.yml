@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'Azure Pipelines'
 
 variables:
   solution: '**/*.sln'
@@ -25,7 +25,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'build'
-        projects: '**/*.csproj'
+        projects: '**/*.sln'
         arguments: '--configuration $(buildConfiguration)'
         
 - stage: QualityAnalysis
